@@ -1,6 +1,5 @@
 import os
 import random
-import datetime
 from aiogram import Bot, types
 from aiogram.utils import executor
 from aiogram.dispatcher import Dispatcher
@@ -10,7 +9,7 @@ from aiogram.types import KeyboardButton, ReplyKeyboardMarkup, InlineKeyboardMar
 import sqlite3
 
 TOKEN = ''
-bot = Bot(token=TOKEN)
+bot = Bot(token=TOKEN, proxy='http://proxy.server:3128')
 dp = Dispatcher(bot)
 
 conn = sqlite3.connect('/home/LsVbadd07/telebase')
@@ -41,10 +40,12 @@ inline_btn_anime_7 = InlineKeyboardButton('7', callback_data='anime7')
 inline_btn_anime_8 = InlineKeyboardButton('8', callback_data='anime8')
 inline_btn_anime_9 = InlineKeyboardButton('9', callback_data='anime9')
 inline_btn_anime_10 = InlineKeyboardButton('10', callback_data='anime10')
+inline_btn_anime_11 = InlineKeyboardButton('11', callback_data='anime11')
+inline_btn_anime_12 = InlineKeyboardButton('12', callback_data='anime12')
 inline_kb_anime_full = InlineKeyboardMarkup(row_width=1).row(inline_btn_anime_1, inline_btn_anime_2, inline_btn_anime_3,
-                                                             inline_btn_anime_4, inline_btn_anime_5)
-inline_kb_anime_full.row(inline_btn_anime_6, inline_btn_anime_7, inline_btn_anime_8, inline_btn_anime_9,
-                         inline_btn_anime_10)
+                                                             inline_btn_anime_4, inline_btn_anime_5, inline_btn_anime_6)
+inline_kb_anime_full.row(inline_btn_anime_7, inline_btn_anime_8, inline_btn_anime_9,
+                         inline_btn_anime_10, inline_btn_anime_11, inline_btn_anime_12)
 inline_btn_film_1 = InlineKeyboardButton('1', callback_data='film1')
 inline_btn_film_2 = InlineKeyboardButton('2', callback_data='film2')
 inline_btn_film_3 = InlineKeyboardButton('3', callback_data='film3')
@@ -80,6 +81,7 @@ inline_btn_music_3 = InlineKeyboardButton('3', callback_data='music3')
 inline_btn_music_4 = InlineKeyboardButton('4', callback_data='music4')
 inline_kb_music_full = InlineKeyboardMarkup(row_width=1).row(inline_btn_music_1, inline_btn_music_2, inline_btn_music_3,
                                                              inline_btn_music_4)
+
 advice_btn_anime = KeyboardButton('Топ аниме')
 advice_btn_book = KeyboardButton('Топ книг')
 advice_btn_music = KeyboardButton('Музыка')
@@ -91,16 +93,17 @@ wp_btn_anime = KeyboardButton('Аниме')
 wp_btn_book = KeyboardButton('Игры')
 wp_btn_music = KeyboardButton('Прочие')
 wp_btn_film = KeyboardButton('Для телефона')
-wp_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).row(wp_btn_anime, wp_btn_book)
-wp_kb.row(wp_btn_music, wp_btn_film)
+wp_btn_neuroart = KeyboardButton('Нейроарты')
+wp_btn_neurophone = KeyboardButton('Нейро для телефона')
+wp_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).row(wp_btn_anime, wp_btn_book, wp_btn_music)
+wp_kb.row(wp_btn_film, wp_btn_neuroart, wp_btn_neurophone)
 
 
 @dp.message_handler(commands=['start'])
 async def process_start_command(message: types.Message):
     await message.reply('Привет' + emoji.emojize(":hand_with_fingers_splayed:") +
                         '\nЯ - НейрОлег - цифровая модель RL версии Олега.\n'
-                        'Я обладаю лишь малой частью его знаний, опыта и кругозора и не способен полноценно заменить '
-                        'его.\n '
+                        'Я обладаю лишь малой частью его знаний, опыта и кругозора и не способен полноценно заменить его.\n'
                         'Но если тебе интересно, я с радостью поделюсь с тобой тем, что у меня есть.\n'
                         'Чтобы узнать о моих возможностях, пиши ' + '/help' + '.')
 
@@ -125,11 +128,7 @@ async def process_about_command(message: types.Message):
 @dp.callback_query_handler(text='about1')
 async def process_callback_about1(call: types.CallbackQuery):
     await bot.answer_callback_query(call.id)
-    dt_now = datetime.datetime.now()
-    my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-    my_file.write('About_me_1 ' + str(dt_now) + '\n')
-    my_file.close()
-    with open(r'/about_me/facts.txt', encoding='utf-8') as file:
+    with open(r'/home/LsVbadd07/about_me/facts.txt', encoding='utf-8') as file:
         message_text = file.read()
     await bot.send_message(call.from_user.id, message_text)
 
@@ -137,10 +136,6 @@ async def process_callback_about1(call: types.CallbackQuery):
 @dp.callback_query_handler(text='about2')
 async def process_callback_about2(call: types.CallbackQuery):
     await bot.answer_callback_query(call.id)
-    dt_now = datetime.datetime.now()
-    my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-    my_file.write('About_me_2 ' + str(dt_now) + '\n')
-    my_file.close()
     with open(r'/home/LsVbadd07/about_me/past.txt', encoding='utf-8') as file:
         message_text = file.read()
     await bot.send_message(call.from_user.id, message_text, reply_markup=inline_kb_past)
@@ -149,10 +144,6 @@ async def process_callback_about2(call: types.CallbackQuery):
 @dp.callback_query_handler(text='past')
 async def process_callback_past(call: types.CallbackQuery):
     await bot.answer_callback_query(call.id)
-    dt_now = datetime.datetime.now()
-    my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-    my_file.write('About_me_past ' + str(dt_now) + '\n')
-    my_file.close()
     with open(r'/home/LsVbadd07/about_me/look_back.txt', encoding='utf-8') as file:
         message_text = file.read()
     await bot.send_message(call.from_user.id, message_text)
@@ -161,10 +152,6 @@ async def process_callback_past(call: types.CallbackQuery):
 @dp.callback_query_handler(text='about3')
 async def process_callback_about3(call: types.CallbackQuery):
     await bot.answer_callback_query(call.id)
-    dt_now = datetime.datetime.now()
-    my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-    my_file.write('About_me_3 ' + str(dt_now) + '\n')
-    my_file.close()
     with open(r'/home/LsVbadd07/about_me/hobbies.txt',
               encoding='utf-8') as file:
         message_text = file.read()
@@ -174,10 +161,6 @@ async def process_callback_about3(call: types.CallbackQuery):
 @dp.message_handler(commands=['filosaf'])
 async def process_filosaf_command(message: types.Message):
     filosof = random.choice(filo_files)
-    dt_now = datetime.datetime.now()
-    my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-    my_file.write('Filosaf ' + str(dt_now) + '\n')
-    my_file.close()
     with open(r'/home/LsVbadd07/filosaf' + '/{0}'.format(filosof), encoding='utf-8') as file:
         message_text = file.read()
         if len(message_text) > 4000:
@@ -194,10 +177,6 @@ async def process_filosaf_command(message: types.Message):
 @dp.callback_query_handler(text='more')
 async def process_callback_filosaf(call: types.CallbackQuery):
     await bot.answer_callback_query(call.id)
-    dt_now = datetime.datetime.now()
-    my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-    my_file.write('Filosof_more ' + str(dt_now) + '\n')
-    my_file.close()
     cursor.execute("SELECT file_id FROM BotContent WHERE Command='filosaf'")
     book_list = cursor.fetchall()
     kppr_1 = book_list[0]
@@ -211,10 +190,6 @@ async def process_callback_filosaf(call: types.CallbackQuery):
 @dp.callback_query_handler(text='anime1')
 async def process_callback_anime_1(call: types.CallbackQuery):
     await bot.answer_callback_query(call.id)
-    dt_now = datetime.datetime.now()
-    my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-    my_file.write('Anime_1 ' + str(dt_now) + '\n')
-    my_file.close()
     with open(r'/home/LsVbadd07/good_advice/anime/1.txt', encoding='utf-8') as file:
         message_text = file.read()
     await bot.send_message(call.from_user.id, message_text)
@@ -223,10 +198,6 @@ async def process_callback_anime_1(call: types.CallbackQuery):
 @dp.callback_query_handler(text='anime2')
 async def process_callback_anime_2(call: types.CallbackQuery):
     await bot.answer_callback_query(call.id)
-    dt_now = datetime.datetime.now()
-    my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-    my_file.write('Anime_2 ' + str(dt_now) + '\n')
-    my_file.close()
     with open(r'/home/LsVbadd07/good_advice/anime/2.txt', encoding='utf-8') as file:
         message_text = file.read()
     await bot.send_message(call.from_user.id, message_text)
@@ -235,10 +206,6 @@ async def process_callback_anime_2(call: types.CallbackQuery):
 @dp.callback_query_handler(text='anime3')
 async def process_callback_anime_3(call: types.CallbackQuery):
     await bot.answer_callback_query(call.id)
-    dt_now = datetime.datetime.now()
-    my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-    my_file.write('Anime_3 ' + str(dt_now) + '\n')
-    my_file.close()
     with open(r'/home/LsVbadd07/good_advice/anime/3.txt', encoding='utf-8') as file:
         message_text = file.read()
     await bot.send_message(call.from_user.id, message_text)
@@ -247,10 +214,6 @@ async def process_callback_anime_3(call: types.CallbackQuery):
 @dp.callback_query_handler(text='anime4')
 async def process_callback_anime_4(call: types.CallbackQuery):
     await bot.answer_callback_query(call.id)
-    dt_now = datetime.datetime.now()
-    my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-    my_file.write('Anime_4 ' + str(dt_now) + '\n')
-    my_file.close()
     with open(r'/home/LsVbadd07/good_advice/anime/4.txt', encoding='utf-8') as file:
         message_text = file.read()
     await bot.send_message(call.from_user.id, message_text)
@@ -259,11 +222,7 @@ async def process_callback_anime_4(call: types.CallbackQuery):
 @dp.callback_query_handler(text='anime5')
 async def process_callback_anime_5(call: types.CallbackQuery):
     await bot.answer_callback_query(call.id)
-    dt_now = datetime.datetime.now()
-    my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-    my_file.write('Anime_5 ' + str(dt_now) + '\n')
-    my_file.close()
-    with open(r'//home/LsVbadd07good_advice/anime/5.txt', encoding='utf-8') as file:
+    with open(r'/home/LsVbadd07/good_advice/anime/5.txt', encoding='utf-8') as file:
         message_text = file.read()
     await bot.send_message(call.from_user.id, message_text)
 
@@ -271,10 +230,6 @@ async def process_callback_anime_5(call: types.CallbackQuery):
 @dp.callback_query_handler(text='anime6')
 async def process_callback_anime_6(call: types.CallbackQuery):
     await bot.answer_callback_query(call.id)
-    dt_now = datetime.datetime.now()
-    my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-    my_file.write('Anime_6 ' + str(dt_now) + '\n')
-    my_file.close()
     with open(r'/home/LsVbadd07/good_advice/anime/6.txt', encoding='utf-8') as file:
         message_text = file.read()
     await bot.send_message(call.from_user.id, message_text)
@@ -283,10 +238,6 @@ async def process_callback_anime_6(call: types.CallbackQuery):
 @dp.callback_query_handler(text='anime7')
 async def process_callback_anime_7(call: types.CallbackQuery):
     await bot.answer_callback_query(call.id)
-    dt_now = datetime.datetime.now()
-    my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-    my_file.write('Anime_7 ' + str(dt_now) + '\n')
-    my_file.close()
     with open(r'/home/LsVbadd07/good_advice/anime/7.txt', encoding='utf-8') as file:
         message_text = file.read()
     await bot.send_message(call.from_user.id, message_text)
@@ -295,10 +246,6 @@ async def process_callback_anime_7(call: types.CallbackQuery):
 @dp.callback_query_handler(text='anime8')
 async def process_callback_anime_8(call: types.CallbackQuery):
     await bot.answer_callback_query(call.id)
-    dt_now = datetime.datetime.now()
-    my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-    my_file.write('Anime_8 ' + str(dt_now) + '\n')
-    my_file.close()
     with open(r'/home/LsVbadd07/good_advice/anime/8.txt', encoding='utf-8') as file:
         message_text = file.read()
     await bot.send_message(call.from_user.id, message_text)
@@ -307,10 +254,6 @@ async def process_callback_anime_8(call: types.CallbackQuery):
 @dp.callback_query_handler(text='anime9')
 async def process_callback_anime_9(call: types.CallbackQuery):
     await bot.answer_callback_query(call.id)
-    dt_now = datetime.datetime.now()
-    my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-    my_file.write('Anime_9 ' + str(dt_now) + '\n')
-    my_file.close()
     with open(r'/home/LsVbadd07/good_advice/anime/9.txt', encoding='utf-8') as file:
         message_text = file.read()
     await bot.send_message(call.from_user.id, message_text)
@@ -319,11 +262,23 @@ async def process_callback_anime_9(call: types.CallbackQuery):
 @dp.callback_query_handler(text='anime10')
 async def process_callback_anime_10(call: types.CallbackQuery):
     await bot.answer_callback_query(call.id)
-    dt_now = datetime.datetime.now()
-    my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-    my_file.write('Anime_10 ' + str(dt_now) + '\n')
-    my_file.close()
     with open(r'/home/LsVbadd07/good_advice/anime/10.txt', encoding='utf-8') as file:
+        message_text = file.read()
+    await bot.send_message(call.from_user.id, message_text)
+
+
+@dp.callback_query_handler(text='anime11')
+async def process_callback_anime_11(call: types.CallbackQuery):
+    await bot.answer_callback_query(call.id)
+    with open(r'/home/LsVbadd07/good_advice/anime/11.txt', encoding='utf-8') as file:
+        message_text = file.read()
+    await bot.send_message(call.from_user.id, message_text)
+
+
+@dp.callback_query_handler(text='anime12')
+async def process_callback_anime_12(call: types.CallbackQuery):
+    await bot.answer_callback_query(call.id)
+    with open(r'/home/LsVbadd07/good_advice/anime/12.txt', encoding='utf-8') as file:
         message_text = file.read()
     await bot.send_message(call.from_user.id, message_text)
 
@@ -331,10 +286,6 @@ async def process_callback_anime_10(call: types.CallbackQuery):
 @dp.callback_query_handler(text='book1')
 async def process_callback_book_1(call: types.CallbackQuery):
     await bot.answer_callback_query(call.id)
-    dt_now = datetime.datetime.now()
-    my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-    my_file.write('Book_1 ' + str(dt_now) + '\n')
-    my_file.close()
     with open(r'/home/LsVbadd07/good_advice/books/1.txt', encoding='utf-8') as file:
         message_text = file.read()
     cursor.execute("SELECT file_id FROM BotContent WHERE id='3'")
@@ -347,10 +298,6 @@ async def process_callback_book_1(call: types.CallbackQuery):
 @dp.callback_query_handler(text='book2')
 async def process_callback_book_2(call: types.CallbackQuery):
     await bot.answer_callback_query(call.id)
-    dt_now = datetime.datetime.now()
-    my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-    my_file.write('Book_2 ' + str(dt_now) + '\n')
-    my_file.close()
     with open(r'/home/LsVbadd07/good_advice/books/2.txt', encoding='utf-8') as file:
         message_text = file.read()
     cursor.execute("SELECT file_id FROM BotContent WHERE id='4'")
@@ -363,10 +310,6 @@ async def process_callback_book_2(call: types.CallbackQuery):
 @dp.callback_query_handler(text='book3')
 async def process_callback_book_3(call: types.CallbackQuery):
     await bot.answer_callback_query(call.id)
-    dt_now = datetime.datetime.now()
-    my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-    my_file.write('Book_3 ' + str(dt_now) + '\n')
-    my_file.close()
     with open(r'/home/LsVbadd07/good_advice/books/3.txt', encoding='utf-8') as file:
         message_text = file.read()
     cursor.execute("SELECT file_id FROM BotContent WHERE id='5'")
@@ -379,10 +322,6 @@ async def process_callback_book_3(call: types.CallbackQuery):
 @dp.callback_query_handler(text='book4')
 async def process_callback_book_4(call: types.CallbackQuery):
     await bot.answer_callback_query(call.id)
-    dt_now = datetime.datetime.now()
-    my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-    my_file.write('Book_4 ' + str(dt_now) + '\n')
-    my_file.close()
     with open(r'/home/LsVbadd07/good_advice/books/4.txt', encoding='utf-8') as file:
         message_text = file.read()
     cursor.execute("SELECT file_id FROM BotContent WHERE id='6'")
@@ -395,10 +334,6 @@ async def process_callback_book_4(call: types.CallbackQuery):
 @dp.callback_query_handler(text='book5')
 async def process_callback_book_5(call: types.CallbackQuery):
     await bot.answer_callback_query(call.id)
-    dt_now = datetime.datetime.now()
-    my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-    my_file.write('Book_5 ' + str(dt_now) + '\n')
-    my_file.close()
     with open(r'/home/LsVbadd07/good_advice/books/5.txt', encoding='utf-8') as file:
         message_text = file.read()
     cursor.execute("SELECT file_id FROM BotContent WHERE id='7'")
@@ -411,10 +346,6 @@ async def process_callback_book_5(call: types.CallbackQuery):
 @dp.callback_query_handler(text='book6')
 async def process_callback_book_6(call: types.CallbackQuery):
     await bot.answer_callback_query(call.id)
-    dt_now = datetime.datetime.now()
-    my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-    my_file.write('Book_6 ' + str(dt_now) + '\n')
-    my_file.close()
     with open(r'/home/LsVbadd07/good_advice/books/6.txt', encoding='utf-8') as file:
         message_text = file.read()
     cursor.execute("SELECT file_id FROM BotContent WHERE id='8'")
@@ -427,10 +358,6 @@ async def process_callback_book_6(call: types.CallbackQuery):
 @dp.callback_query_handler(text='book7')
 async def process_callback_book_7(call: types.CallbackQuery):
     await bot.answer_callback_query(call.id)
-    dt_now = datetime.datetime.now()
-    my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-    my_file.write('Book_7 ' + str(dt_now) + '\n')
-    my_file.close()
     with open(r'/home/LsVbadd07/good_advice/books/7.txt', encoding='utf-8') as file:
         message_text = file.read()
     cursor.execute("SELECT file_id FROM BotContent WHERE id='9'")
@@ -443,10 +370,6 @@ async def process_callback_book_7(call: types.CallbackQuery):
 @dp.callback_query_handler(text='book8')
 async def process_callback_book_8(call: types.CallbackQuery):
     await bot.answer_callback_query(call.id)
-    dt_now = datetime.datetime.now()
-    my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-    my_file.write('Book_8 ' + str(dt_now) + '\n')
-    my_file.close()
     with open(r'/home/LsVbadd07/good_advice/books/8.txt', encoding='utf-8') as file:
         message_text = file.read()
     cursor.execute("SELECT file_id FROM BotContent WHERE id='10'")
@@ -459,10 +382,6 @@ async def process_callback_book_8(call: types.CallbackQuery):
 @dp.callback_query_handler(text='book9')
 async def process_callback_book_9(call: types.CallbackQuery):
     await bot.answer_callback_query(call.id)
-    dt_now = datetime.datetime.now()
-    my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-    my_file.write('Book_9 ' + str(dt_now) + '\n')
-    my_file.close()
     with open(r'/home/LsVbadd07/good_advice/books/9.txt', encoding='utf-8') as file:
         message_text = file.read()
     cursor.execute("SELECT file_id FROM BotContent WHERE id='11'")
@@ -475,10 +394,6 @@ async def process_callback_book_9(call: types.CallbackQuery):
 @dp.callback_query_handler(text='book10')
 async def process_callback_book_10(call: types.CallbackQuery):
     await bot.answer_callback_query(call.id)
-    dt_now = datetime.datetime.now()
-    my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-    my_file.write('Book_10 ' + str(dt_now) + '\n')
-    my_file.close()
     with open(r'/home/LsVbadd07/good_advice/books/10.txt', encoding='utf-8') as file:
         message_text = file.read()
     cursor.execute("SELECT file_id FROM BotContent WHERE id='12'")
@@ -491,10 +406,6 @@ async def process_callback_book_10(call: types.CallbackQuery):
 @dp.callback_query_handler(text='music1')
 async def process_callback_music_1(call: types.CallbackQuery):
     await bot.answer_callback_query(call.id)
-    dt_now = datetime.datetime.now()
-    my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-    my_file.write('Music_1 ' + str(dt_now) + '\n')
-    my_file.close()
     with open(r'/home/LsVbadd07/good_advice/music/instrumental.txt', encoding='utf-8') as file:
         message_text = file.read()
     instr_list = music_list[12:18]
@@ -515,10 +426,6 @@ async def process_callback_music_1(call: types.CallbackQuery):
 @dp.callback_query_handler(text='music2')
 async def process_callback_music_2(call: types.CallbackQuery):
     await bot.answer_callback_query(call.id)
-    dt_now = datetime.datetime.now()
-    my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-    my_file.write('Music_2 ' + str(dt_now) + '\n')
-    my_file.close()
     with open(r'/home/LsVbadd07/good_advice/music/rock.txt', encoding='utf-8') as file:
         message_text = file.read()
     instr_list = music_list[0:6]
@@ -539,10 +446,6 @@ async def process_callback_music_2(call: types.CallbackQuery):
 @dp.callback_query_handler(text='music3')
 async def process_callback_music_3(call: types.CallbackQuery):
     await bot.answer_callback_query(call.id)
-    dt_now = datetime.datetime.now()
-    my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-    my_file.write('Music_3 ' + str(dt_now) + '\n')
-    my_file.close()
     with open(r'/home/LsVbadd07/good_advice/music/rap.txt', encoding='utf-8') as file:
         message_text = file.read()
     instr_list = music_list[6:12]
@@ -563,13 +466,9 @@ async def process_callback_music_3(call: types.CallbackQuery):
 @dp.callback_query_handler(text='music4')
 async def process_callback_music_4(call: types.CallbackQuery):
     await bot.answer_callback_query(call.id)
-    dt_now = datetime.datetime.now()
-    my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-    my_file.write('Music_4 ' + str(dt_now) + '\n')
-    my_file.close()
     with open(r'/home/LsVbadd07/good_advice/music/maidcore.txt', encoding='utf-8') as file:
         message_text = file.read()
-    instr_list = music_list[18:24]
+    instr_list = music_list[18:26]
     track_list = []
     for i in range(len(instr_list)):
         track = instr_list[i]
@@ -582,15 +481,13 @@ async def process_callback_music_4(call: types.CallbackQuery):
     await bot.send_audio(call.from_user.id, track_list[3])
     await bot.send_audio(call.from_user.id, track_list[4])
     await bot.send_audio(call.from_user.id, track_list[5])
+    await bot.send_audio(call.from_user.id, track_list[6])
+    await bot.send_audio(call.from_user.id, track_list[7])
 
 
 @dp.callback_query_handler(text='film1')
 async def process_callback_film_1(call: types.CallbackQuery):
     await bot.answer_callback_query(call.id)
-    dt_now = datetime.datetime.now()
-    my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-    my_file.write('Film_1 ' + str(dt_now) + '\n')
-    my_file.close()
     with open(r'/home/LsVbadd07/good_advice/films/1.txt', encoding='utf-8') as file:
         message_text = file.read()
     await bot.send_message(call.from_user.id, message_text)
@@ -599,10 +496,6 @@ async def process_callback_film_1(call: types.CallbackQuery):
 @dp.callback_query_handler(text='film2')
 async def process_callback_film_2(call: types.CallbackQuery):
     await bot.answer_callback_query(call.id)
-    dt_now = datetime.datetime.now()
-    my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-    my_file.write('Film_2 ' + str(dt_now) + '\n')
-    my_file.close()
     with open(r'/home/LsVbadd07/good_advice/films/2.txt', encoding='utf-8') as file:
         message_text = file.read()
     await bot.send_message(call.from_user.id, message_text)
@@ -611,10 +504,6 @@ async def process_callback_film_2(call: types.CallbackQuery):
 @dp.callback_query_handler(text='film3')
 async def process_callback_film_3(call: types.CallbackQuery):
     await bot.answer_callback_query(call.id)
-    dt_now = datetime.datetime.now()
-    my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-    my_file.write('Film_3 ' + str(dt_now) + '\n')
-    my_file.close()
     with open(r'/home/LsVbadd07/good_advice/films/3.txt', encoding='utf-8') as file:
         message_text = file.read()
     await bot.send_message(call.from_user.id, message_text)
@@ -623,10 +512,6 @@ async def process_callback_film_3(call: types.CallbackQuery):
 @dp.callback_query_handler(text='film4')
 async def process_callback_film_4(call: types.CallbackQuery):
     await bot.answer_callback_query(call.id)
-    dt_now = datetime.datetime.now()
-    my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-    my_file.write('Film_4 ' + str(dt_now) + '\n')
-    my_file.close()
     with open(r'/home/LsVbadd07/good_advice/films/4.txt', encoding='utf-8') as file:
         message_text = file.read()
     await bot.send_message(call.from_user.id, message_text)
@@ -635,10 +520,6 @@ async def process_callback_film_4(call: types.CallbackQuery):
 @dp.callback_query_handler(text='film5')
 async def process_callback_film_5(call: types.CallbackQuery):
     await bot.answer_callback_query(call.id)
-    dt_now = datetime.datetime.now()
-    my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-    my_file.write('Film_5 ' + str(dt_now) + '\n')
-    my_file.close()
     with open(r'/home/LsVbadd07/good_advice/films/5.txt', encoding='utf-8') as file:
         message_text = file.read()
     await bot.send_message(call.from_user.id, message_text)
@@ -647,10 +528,6 @@ async def process_callback_film_5(call: types.CallbackQuery):
 @dp.callback_query_handler(text='film6')
 async def process_callback_film_6(call: types.CallbackQuery):
     await bot.answer_callback_query(call.id)
-    dt_now = datetime.datetime.now()
-    my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-    my_file.write('Film_6 ' + str(dt_now) + '\n')
-    my_file.close()
     with open(r'/home/LsVbadd07/good_advice/films/6.txt', encoding='utf-8') as file:
         message_text = file.read()
     await bot.send_message(call.from_user.id, message_text)
@@ -659,10 +536,6 @@ async def process_callback_film_6(call: types.CallbackQuery):
 @dp.callback_query_handler(text='film7')
 async def process_callback_film_7(call: types.CallbackQuery):
     await bot.answer_callback_query(call.id)
-    dt_now = datetime.datetime.now()
-    my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-    my_file.write('Film_7 ' + str(dt_now) + '\n')
-    my_file.close()
     with open(r'/home/LsVbadd07/good_advice/films/7.txt', encoding='utf-8') as file:
         message_text = file.read()
     await bot.send_message(call.from_user.id, message_text)
@@ -671,10 +544,6 @@ async def process_callback_film_7(call: types.CallbackQuery):
 @dp.callback_query_handler(text='film8')
 async def process_callback_film_8(call: types.CallbackQuery):
     await bot.answer_callback_query(call.id)
-    dt_now = datetime.datetime.now()
-    my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-    my_file.write('Film_8 ' + str(dt_now) + '\n')
-    my_file.close()
     with open(r'/home/LsVbadd07/good_advice/films/8.txt', encoding='utf-8') as file:
         message_text = file.read()
     await bot.send_message(call.from_user.id, message_text)
@@ -683,10 +552,6 @@ async def process_callback_film_8(call: types.CallbackQuery):
 @dp.callback_query_handler(text='film9')
 async def process_callback_film_9(call: types.CallbackQuery):
     await bot.answer_callback_query(call.id)
-    dt_now = datetime.datetime.now()
-    my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-    my_file.write('Film_9 ' + str(dt_now) + '\n')
-    my_file.close()
     with open(r'/home/LsVbadd07/good_advice/films/9.txt', encoding='utf-8') as file:
         message_text = file.read()
     await bot.send_message(call.from_user.id, message_text)
@@ -695,10 +560,6 @@ async def process_callback_film_9(call: types.CallbackQuery):
 @dp.callback_query_handler(text='film10')
 async def process_callback_film_10(call: types.CallbackQuery):
     await bot.answer_callback_query(call.id)
-    my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-    dt_now = datetime.datetime.now()
-    my_file.write('Film_10 ' + str(dt_now) + '\n')
-    my_file.close()
     with open(r'/home/LsVbadd07/good_advice/films/10.txt', encoding='utf-8') as file:
         message_text = file.read()
     await bot.send_message(call.from_user.id, message_text)
@@ -707,10 +568,6 @@ async def process_callback_film_10(call: types.CallbackQuery):
 @dp.callback_query_handler(text='film11')
 async def process_callback_film_11(call: types.CallbackQuery):
     await bot.answer_callback_query(call.id)
-    my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-    dt_now = datetime.datetime.now()
-    my_file.write('Film_11 ' + str(dt_now) + '\n')
-    my_file.close()
     with open(r'/home/LsVbadd07/good_advice/films/11.txt', encoding='utf-8') as file:
         message_text = file.read()
     await bot.send_message(call.from_user.id, message_text)
@@ -719,10 +576,6 @@ async def process_callback_film_11(call: types.CallbackQuery):
 @dp.callback_query_handler(text='film12')
 async def process_callback_film_12(call: types.CallbackQuery):
     await bot.answer_callback_query(call.id)
-    my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-    dt_now = datetime.datetime.now()
-    my_file.write('Film_12 ' + str(dt_now) + '\n')
-    my_file.close()
     with open(r'/home/LsVbadd07/good_advice/films/12.txt', encoding='utf-8') as file:
         message_text = file.read()
     await bot.send_message(call.from_user.id, message_text)
@@ -736,10 +589,6 @@ async def process_advice_command(message: types.Message):
 
 @dp.message_handler(commands=['auf'])
 async def process_auf_command(message: types.Message):
-    dt_now = datetime.datetime.now()
-    my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-    my_file.write('auf ' + str(dt_now) + '\n')
-    my_file.close()
     cursor.execute("SELECT file_id FROM BotContent WHERE Command='auf'")
     auf_list_1 = cursor.fetchall()
     cursor.execute("SELECT Content FROM BotContent WHERE Command='auf'")
@@ -755,24 +604,19 @@ async def process_auf_command(message: types.Message):
 
 @dp.message_handler(commands=['cringe'])
 async def process_cringe_command(message: types.Message):
-    dt_now = datetime.datetime.now()
-    my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-    my_file.write('cringe ' + str(dt_now) + '\n')
-    my_file.close()
     cursor.execute("SELECT file_id FROM BotContent WHERE Command='cringe'")
     cringe_list = cursor.fetchall()
     photo_id = random.choice(cringe_list)
     photo_id = photo_id[0]
-    await bot.send_photo(message.from_user.id, photo_id)
+    try:
+        await bot.send_photo(message.from_user.id, photo_id)
+    except:
+        await bot.send_message(message.from_user.id, photo_id)
 
 
 @dp.message_handler(commands=['paste'])
 async def process_paste_command(message: types.Message):
     pasta = random.choice(pasta_files)
-    dt_now = datetime.datetime.now()
-    my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-    my_file.write('paste ' + str(dt_now) + '\n')
-    my_file.close()
     with open(r'/home/LsVbadd07/paste/{0}'.format(pasta), encoding='utf-8') as file:
         message_text = file.read()
         if len(message_text) > 4000:
@@ -820,10 +664,6 @@ async def handle_message(message: types.Message):
             message_text = file.read()
             await bot.send_message(message.from_user.id, message_text, reply_markup=inline_kb_film_full)
     elif message.text == 'Аниме':
-        dt_now = datetime.datetime.now()
-        my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-        my_file.write('Аниме обои ' + str(dt_now) + '\n')
-        my_file.close()
         cursor.execute("SELECT file_id FROM BotContent WHERE subcommand='anime'")
         awp_list = cursor.fetchall()
         awp_ind = random.randint(0, len(awp_list) - 1)
@@ -831,10 +671,6 @@ async def handle_message(message: types.Message):
         awp = awp[0]
         await bot.send_document(message.from_user.id, awp)
     elif message.text == 'Игры':
-        dt_now = datetime.datetime.now()
-        my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-        my_file.write('Игры обои ' + str(dt_now) + '\n')
-        my_file.close()
         cursor.execute("SELECT file_id FROM BotContent WHERE subcommand='games'")
         gwp_list = cursor.fetchall()
         gwp_ind = random.randint(0, len(gwp_list) - 1)
@@ -842,10 +678,6 @@ async def handle_message(message: types.Message):
         gwp = gwp[0]
         await bot.send_document(message.from_user.id, gwp)
     elif message.text == 'Для телефона':
-        dt_now = datetime.datetime.now()
-        my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-        my_file.write('Для телефона обои ' + str(dt_now) + '\n')
-        my_file.close()
         cursor.execute("SELECT file_id FROM BotContent WHERE subcommand='phone'")
         pwp_list = cursor.fetchall()
         pwp_ind = random.randint(0, len(pwp_list) - 1)
@@ -853,24 +685,34 @@ async def handle_message(message: types.Message):
         pwp = pwp[0]
         await bot.send_document(message.from_user.id, pwp)
     elif message.text == 'Прочие':
-        dt_now = datetime.datetime.now()
-        my_file = open(r'/home/LsVbadd07/data_from_users.txt', 'a')
-        my_file.write('Прочие обои ' + str(dt_now) + '\n')
-        my_file.close()
         cursor.execute("SELECT file_id FROM BotContent WHERE subcommand='others'")
         owp_list = cursor.fetchall()
         owp_ind = random.randint(0, len(owp_list) - 1)
         owp = owp_list[owp_ind]
         owp = owp[0]
         await bot.send_document(message.from_user.id, owp)
+    elif message.text == 'Нейроарты':
+        cursor.execute("SELECT file_id FROM BotContent WHERE subcommand='neuroart'")
+        nwp_list = cursor.fetchall()
+        nwp_ind = random.randint(0, len(nwp_list) - 1)
+        nwp = nwp_list[nwp_ind]
+        nwp = nwp[0]
+        await bot.send_document(message.from_user.id, nwp)
+    elif message.text == 'Нейро для телефона':
+        cursor.execute("SELECT file_id FROM BotContent WHERE subcommand='neurophone'")
+        npwp_list = cursor.fetchall()
+        npwp_ind = random.randint(0, len(npwp_list) - 1)
+        npwp = npwp_list[npwp_ind]
+        npwp = npwp[0]
+        await bot.send_document(message.from_user.id, npwp)
     else:
-        message_text = 'Я пока не умею слушать и понимать речь, только команды' + emoji.emojize(":disappointed_face:")
+        message_text = 'Я пока не умею понимать речь, только команды' + emoji.emojize(":disappointed_face:")
         await bot.send_message(message.from_user.id, message_text)
 
 
 @dp.message_handler(content_types=ContentType.ANY)
 async def handle_other_text(message):
-    message_text = 'Я пока не умею слушать и понимать речь, только команды' + emoji.emojize(":disappointed_face:")
+    message_text = 'Я пока не умею понимать сообщения, только команды' + emoji.emojize(":disappointed_face:")
     await bot.send_message(message.from_user.id, message_text)
 
 
